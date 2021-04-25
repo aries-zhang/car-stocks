@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cars-stock-deployment
+  labels:
+    app: car-stocks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: car-stocks
+  template:
+    metadata:
+      labels:
+        app: car-stocks
+    spec:
+      containers:
+      - name: car-stocks
+        image: arieszhang/car-stocks:0.1.2
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: car-stocks-service
+  labels:
+    app: car-stocks
+spec:
+  type: NodePort
+  ports:
+  - port: 8088
+    targetPort: 80
+  selector:
+    app: car-stocks
