@@ -353,3 +353,4 @@ MigrationBackup/
 **/obj
 app/
 .DS_Store
+.env
