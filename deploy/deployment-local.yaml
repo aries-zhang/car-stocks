@@ -33,12 +33,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: car-stocks-service
-  labels:
-    app: car-stocks
 spec:
   type: NodePort
-  ports:
-  - port: 8088
-    targetPort: 80
   selector:
     app: car-stocks
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
