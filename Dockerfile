@@ -4,7 +4,7 @@ COPY . .
 RUN dotnet test
 RUN dotnet publish -c Release -o package
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=builder /app/package .
 ENTRYPOINT ["dotnet", "car-stocks.dll"]
