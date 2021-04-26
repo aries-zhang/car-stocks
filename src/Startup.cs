@@ -1,3 +1,4 @@
+using CarStocks.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace car_stocks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            RegisterDependencies(services);
 
             services.AddControllers();
         }
@@ -44,6 +46,12 @@ namespace car_stocks
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void RegisterDependencies(IServiceCollection services)
+        {
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IDealerRepository, DealerRepository>();
         }
     }
 }
