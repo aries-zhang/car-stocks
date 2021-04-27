@@ -32,16 +32,19 @@ namespace CarStocks.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public Car Get(int id) {
+        public Car Get(int id)
+        {
             var car = this._carRepository.Get(id);
 
-            if(car==null) {
+            if (car == null)
+            {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
 
                 return null;
             }
 
-            if(car.DealerId != _authDealerId) {
+            if (car.DealerId != _authDealerId)
+            {
                 Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 
                 return null;
@@ -52,7 +55,7 @@ namespace CarStocks.Controllers
 
         [HttpGet]
         [Route("search")]
-        public IEnumerable<Car> Search([FromQuery]string make, [FromQuery]string model)
+        public IEnumerable<Car> Search([FromQuery] string make, [FromQuery] string model)
         {
             return this._carRepository.GetAll(_authDealerId, make, model);
         }
@@ -74,7 +77,8 @@ namespace CarStocks.Controllers
         {
             var existingRecord = this._carRepository.Get(id);
 
-            if(existingRecord==null) {
+            if (existingRecord == null)
+            {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
 
                 return;
@@ -96,8 +100,9 @@ namespace CarStocks.Controllers
         public void Delete(int id)
         {
             var existingRecord = this._carRepository.Get(id);
-            
-            if(existingRecord==null) {
+
+            if (existingRecord == null)
+            {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
 
                 return;

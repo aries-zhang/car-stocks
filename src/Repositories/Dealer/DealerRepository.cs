@@ -20,7 +20,7 @@ namespace CarStocks.Repositories
         {
             using var db = this.GetDbconnection();
 
-            return db.Query<Dealer>("SELECT * FROM Dealer WHERE Token = @token", new {token}).SingleOrDefault();
+            return db.Query<Dealer>("SELECT * FROM Dealer WHERE Token = @token", new { token }).SingleOrDefault();
         }
 
         public void Delete(Dealer entity)

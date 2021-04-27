@@ -22,14 +22,14 @@ namespace CarStocks.Repositories
             var sql = "DELETE FROM Car WHERE Id = @id";
             using var db = this.GetDbconnection();
 
-            db.Execute(sql, new {id = entity.Id});
+            db.Execute(sql, new { id = entity.Id });
         }
 
         public Car Get(int id)
         {
             using var db = this.GetDbconnection();
-            
-            return db.Query<Car>("SELECT * FROM CAR WHERE Id=@id", new {id = id}).FirstOrDefault();
+
+            return db.Query<Car>("SELECT * FROM CAR WHERE Id=@id", new { id = id }).FirstOrDefault();
         }
 
         public Car Insert(Car entity)
@@ -38,21 +38,23 @@ namespace CarStocks.Repositories
 
             using var db = this.GetDbconnection();
 
-            entity.Id  = db.ExecuteScalar<int>(sql, entity);
+            entity.Id = db.ExecuteScalar<int>(sql, entity);
 
-            return entity;             
-        } 
+            return entity;
+        }
 
         public List<Car> GetAll(int dealer, string make, string model)
         {
             var builder = new SqlBuilder();
 
             var template = builder.AddTemplate("SELECT * FROM Car /**where**/");
-            builder.Where("DealerId = @dealerId", new {dealerId = dealer});
-            if(!string.IsNullOrEmpty(make)) {
+            builder.Where("DealerId = @dealerId", new { dealerId = dealer });
+            if (!string.IsNullOrEmpty(make))
+            {
                 builder.Where("Make LIKE '%' || @make || '%'", new { make });
             }
-            if(!string.IsNullOrEmpty(model)) {
+            if (!string.IsNullOrEmpty(model))
+            {
                 builder.Where("Model LIKE '%' || @model || '%'", new { model });
             }
 

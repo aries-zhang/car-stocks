@@ -16,30 +16,33 @@ namespace CarStocks.Test
     {
         private Mock<ICarRepository> _mock;
 
-        public CarControllerTest() {
-            var car = new Car() {
-                Id=1,
-                Make="Audi",
-                Model="A6",
-                Year=2010,
-                DealerId=1
+        public CarControllerTest()
+        {
+            var car = new Car()
+            {
+                Id = 1,
+                Make = "Audi",
+                Model = "A6",
+                Year = 2010,
+                DealerId = 1
             };
 
             _mock = new Mock<ICarRepository>();
-            _mock.Setup(o => o.GetAll(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns((new [] { car }).ToList());
+            _mock.Setup(o => o.GetAll(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns((new[] { car }).ToList());
             _mock.Setup(o => o.Update(It.IsAny<Car>())).Returns<Car>(car => car);
             _mock.Setup(o => o.Get(It.IsAny<int>())).Returns(car);
             _mock.Setup(o => o.Delete(It.IsAny<Car>()));
             _mock.Setup(o => o.Insert(It.IsAny<Car>())).Returns<Car>(car => car);
         }
 
-        private CarController MockIt() {
+        private CarController MockIt()
+        {
             var controller = new CarController(_mock.Object);
 
             return controller;
         }
 
-        private void MockHttpContext(ControllerBase controller, int dealerId) 
+        private void MockHttpContext(ControllerBase controller, int dealerId)
         {
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -58,7 +61,7 @@ namespace CarStocks.Test
 
             _mock.Verify(o => o.GetAll(
                 It.Is<int>(i => i == authDealerId),
-                It.Is<string>(s => string.IsNullOrEmpty(s)), 
+                It.Is<string>(s => string.IsNullOrEmpty(s)),
                 It.Is<string>(s => string.IsNullOrEmpty(s))
             ), Times.Once);
 
@@ -66,7 +69,8 @@ namespace CarStocks.Test
         }
 
         [Fact]
-        public void Post_Assigns_Correct_Dealer_Id() {
+        public void Post_Assigns_Correct_Dealer_Id()
+        {
             var authDealerId = It.IsAny<int>();
 
             var controller = MockIt();
@@ -74,11 +78,11 @@ namespace CarStocks.Test
 
             controller.Post(new Car());
 
-            _mock.Verify(o => o.Insert(It.Is<Car>(c=>c.DealerId == authDealerId)), Times.Once);
+            _mock.Verify(o => o.Insert(It.Is<Car>(c => c.DealerId == authDealerId)), Times.Once);
         }
 
         [Fact]
-        public void Put_Returns_401_With_Mismatching_Dealer_Auth() 
+        public void Put_Returns_401_With_Mismatching_Dealer_Auth()
         {
             var authDealerId = 2;
 
@@ -91,7 +95,8 @@ namespace CarStocks.Test
         }
 
         [Fact]
-        public void Put_Returns_404_When_No_Record_Found() {
+        public void Put_Returns_404_When_No_Record_Found()
+        {
             var authDealerId = 1;
 
             var mock = new Mock<ICarRepository>();
@@ -102,15 +107,15 @@ namespace CarStocks.Test
 
             controller.Put(1, 0);
 
-            mock.Verify(o=>o.Get(It.IsAny<int>()), Times.Once);
-            mock.Verify(o=>o.Update(It.IsAny<Car>()), Times.Never);
+            mock.Verify(o => o.Get(It.IsAny<int>()), Times.Once);
+            mock.Verify(o => o.Update(It.IsAny<Car>()), Times.Never);
 
             Assert.Equal((int)HttpStatusCode.NotFound, controller.HttpContext.Response.StatusCode);
-        } 
+        }
 
 
         [Fact]
-        public void Delete_Returns_401_With_Mismatching_Dealer_Auth() 
+        public void Delete_Returns_401_With_Mismatching_Dealer_Auth()
         {
             var authDealerId = 2;
 
@@ -123,7 +128,8 @@ namespace CarStocks.Test
         }
 
         [Fact]
-        public void Delete_Returns_404_When_No_Record_Found() {
+        public void Delete_Returns_404_When_No_Record_Found()
+        {
             var authDealerId = 1;
 
             var mock = new Mock<ICarRepository>();
@@ -134,8 +140,8 @@ namespace CarStocks.Test
 
             controller.Delete(It.IsAny<int>());
 
-            mock.Verify(o=>o.Get(It.IsAny<int>()), Times.Once);
-            mock.Verify(o=>o.Delete(It.IsAny<Car>()), Times.Never);
+            mock.Verify(o => o.Get(It.IsAny<int>()), Times.Once);
+            mock.Verify(o => o.Delete(It.IsAny<Car>()), Times.Never);
 
             Assert.Equal((int)HttpStatusCode.NotFound, controller.HttpContext.Response.StatusCode);
         }
