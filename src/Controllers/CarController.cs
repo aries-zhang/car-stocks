@@ -81,12 +81,12 @@ namespace CarStocks.Controllers
         /// </summary>
         /// <param name="car"></param>
         /// <response code="201">If the car is successfully created.</response>
+        /// <response code="400">If bad request or invalid values for "car".</response>
         /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>
         [HttpPost]
         public void Post([FromBody] Car car)
         {
-            // TODO: verify values -> make, model non-empty, year is valid year, stock does not go negative?
-
+            // TODO: What if combination of make, model and year for a single dealer already exists?
             car.DealerId = _authDealerId;
 
             this._carRepository.Insert(car);
