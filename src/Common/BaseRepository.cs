@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,6 +6,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace CarStocks.Common
 {
@@ -21,7 +21,7 @@ namespace CarStocks.Common
 
         public DbConnection GetDbconnection()
         {
-            return new SqlConnection(this._config.GetConnectionString("DefaultConnection"));
+            return new SqliteConnection(this._config.GetConnectionString("DefaultConnection"));
         }
     }
 }

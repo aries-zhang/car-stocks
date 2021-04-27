@@ -17,7 +17,7 @@ namespace CarStocks.Controllers
     {
         private ICarRepository _carRepository;
 
-        private int _dealerId
+        private int _authDealerId
         {
             get
             {
@@ -31,17 +31,42 @@ namespace CarStocks.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Car> Get([FromQuery]string make, [FromQuery]string model)
+        [Route("{id}")]
+        public Car Get(int id) {
+            var car = this._carRepository.Get(id);
+
+            if(car==null) {
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                return null;
+            }
+
+            if(car.DealerId != _authDealerId) {
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return null;
+            }
+
+            return car;
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public IEnumerable<Car> Search([FromQuery]string make, [FromQuery]string model)
         {
-            return this._carRepository.GetAll(_dealerId, make, model);
+            return this._carRepository.GetAll(_authDealerId, make, model);
         }
 
         [HttpPost]
         public void Post([FromBody] Car car)
         {
-            car.DealerId = _dealerId;
+            // TODO: verify values -> make, model non-empty, year is valid year, stock does not go negative?
+
+            car.DealerId = _authDealerId;
 
             this._carRepository.Insert(car);
+
+            Response.StatusCode = (int)HttpStatusCode.Created;
         }
 
         [HttpPut("{id}")]
@@ -49,7 +74,13 @@ namespace CarStocks.Controllers
         {
             var existingRecord = this._carRepository.Get(id);
 
-            if (existingRecord.DealerId != _dealerId)
+            if(existingRecord==null) {
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                return;
+            }
+
+            if (existingRecord.DealerId != _authDealerId)
             {
                 Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 
@@ -65,8 +96,14 @@ namespace CarStocks.Controllers
         public void Delete(int id)
         {
             var existingRecord = this._carRepository.Get(id);
+            
+            if(existingRecord==null) {
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
 
-            if (existingRecord.DealerId != _dealerId)
+                return;
+            }
+
+            if (existingRecord.DealerId != _authDealerId)
             {
                 Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 
@@ -75,6 +112,5 @@ namespace CarStocks.Controllers
 
             this._carRepository.Delete(existingRecord);
         }
-
     }
 }

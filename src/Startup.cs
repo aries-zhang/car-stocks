@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CarStocks.Common;
 
 namespace car_stocks
 {
@@ -28,6 +29,7 @@ namespace car_stocks
             RegisterDependencies(services);
 
             services.AddControllers();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,9 +40,16 @@ namespace car_stocks
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Car Stocks API V1");
+            });
+
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseDealerAuthMiddleware();
 
             app.UseEndpoints(endpoints =>
             {

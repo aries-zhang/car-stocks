@@ -1,34 +1,66 @@
-﻿using CarStocks.Repositories;
+﻿using CarStocks.Entities;
+using CarStocks.Repositories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace CarStocks.Common
 {
     public class DealerAuthorisationMiddleware
     {
+        private const string AUTH_HEADER_KEY="Authorization";
         private readonly RequestDelegate _next;
-        private IDealerRepository _dealerRepository;
 
-        public DealerAuthorisationMiddleware(RequestDelegate next, IDealerRepository dealerRepository)
+        public DealerAuthorisationMiddleware(RequestDelegate next)
         {
             this._next = next;
-            this._dealerRepository = dealerRepository;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context , IDealerRepository dealerRepository)
         {
-            // Authorization: Token token=h480djs93hd8
-            string authHeader = context.Request.Headers["Authorization"];
+            // Authorization: Token h480djs93hd8
+            var dealer = ValidateDealerToken(context, dealerRepository);
+            if(dealer != null) {
+                context.Items[Constants.DEALER_ID_CONTEXT_KEY] = dealer.Id;
+                await _next(context);
+            }
+            else {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            }
+        }
 
-            // TODO: header validation
+        private Dealer ValidateDealerToken(HttpContext context, IDealerRepository dealerRepository) 
+        {
+            if(!context.Request.Headers.Any(h=>h.Key==AUTH_HEADER_KEY)) {
+                return null;
+            }
 
-            // string token = authHeader.Split("=")[1].Trim();
+            var authHeader = context.Request.Headers[AUTH_HEADER_KEY].ToString();
 
-            // TODO: data validation
-            // context.Items[Constants.DEALER_ID_CONTEXT_KEY] = this._dealerRepository.GetByToken(token).Id;
+            if(!authHeader.StartsWith("Token ")) {
+                return null;
+            }
+
+            var dealerToken = authHeader.Split(" ")[1];
+
+            if(string.IsNullOrEmpty(dealerToken)) {
+                return null;
+            }
+
+            return dealerRepository.GetByToken(dealerToken);
+        }
+    }
+
+
+    public static class DealerAuthorisationMiddlewareExtension
+    {
+        public static IApplicationBuilder UseDealerAuthMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<DealerAuthorisationMiddleware>();
         }
     }
 }
