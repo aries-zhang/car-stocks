@@ -10,6 +10,7 @@ namespace CarStocks.Common
         public static void Initialise(IConfiguration config)
         {
             using var db = new SqliteConnection(config.GetConnectionString("DefaultConnection"));
+            db.Open();
 
             if (!TableExists(db, "Dealer"))
             {

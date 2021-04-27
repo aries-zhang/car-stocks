@@ -21,23 +21,6 @@ namespace CarStocks.Test.Common
 
                 config.AddConfiguration(integrationConfig);
             });
-
-            builder.ConfigureServices(services =>
-            {
-                // Build the service provider.
-                var sp = services.BuildServiceProvider();
-
-                // Create a scope to obtain a reference to the database contexts
-                using (var scope = sp.CreateScope())
-                {
-                    var scopedServices = scope.ServiceProvider;
-
-                    var logger = scopedServices.GetRequiredService<ILogger<CarStockWebApplicationFactory<TStartup>>>();
-                    var config = scopedServices.GetRequiredService<IConfiguration>();
-
-                    DatabaseInitialiser.Initialise(config);
-                }
-            });
         }
     }
 }
