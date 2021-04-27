@@ -30,6 +30,7 @@ namespace CarStocks.Controllers
             this._carRepository = carRepository;
         }
 
+        
         [HttpGet]
         [Route("{id}")]
         public Car Get(int id)

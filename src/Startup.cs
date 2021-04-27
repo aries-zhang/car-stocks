@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CarStocks.Common;
+using System.Reflection;
+using System.IO;
 
 namespace car_stocks
 {
@@ -29,7 +31,19 @@ namespace car_stocks
             RegisterDependencies(services);
 
             services.AddControllers();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(config =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                config.IncludeXmlComments(xmlPath);
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowDebugging", builder =>
+                {
+                    builder.WithOrigins("localhost:5000").AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +53,8 @@ namespace car_stocks
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowDebugging");
 
             app.UseSwagger();
 

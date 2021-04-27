@@ -30,4 +30,4 @@ Docker build . -t arieszhang/car-stocks:latest
 kubectl apply -f deploy/deployment-local.yaml
 ```
 
-NB: tested on docker desktop Kubernetes only.
+Tested on docker desktop Kubernetes only.
