@@ -30,7 +30,14 @@ namespace CarStocks.Controllers
             this._carRepository = carRepository;
         }
 
-        
+        /// <summary>
+        /// Gets a single car.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A car with the specified Id.</returns>
+        /// <response code="200">Returns the car.</response>
+        /// <response code="404">If the specified car does not exist.</response>   
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
         [HttpGet]
         [Route("{id}")]
         public Car Get(int id)
@@ -54,6 +61,13 @@ namespace CarStocks.Controllers
             return car;
         }
 
+        /// <summary>
+        /// Search cars by make and model.
+        /// </summary>
+        /// <param name="make"></param>
+        /// <param name="model"></param>
+        /// <returns>List of cars that matches the search parameters.</returns>
+        /// <response code="200">Returns the list of cars.</response>
         [HttpGet]
         [Route("search")]
         public IEnumerable<Car> Search([FromQuery] string make, [FromQuery] string model)
@@ -61,6 +75,12 @@ namespace CarStocks.Controllers
             return this._carRepository.GetAll(_authDealerId, make, model);
         }
 
+        /// <summary>
+        /// Add a new car.
+        /// </summary>
+        /// <param name="car"></param>
+        /// <response code="201">If the car is successfully created.</response>
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
         [HttpPost]
         public void Post([FromBody] Car car)
         {
@@ -73,6 +93,13 @@ namespace CarStocks.Controllers
             Response.StatusCode = (int)HttpStatusCode.Created;
         }
 
+        /// <summary>
+        /// Update stock level of the specified car by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="stock"></param>
+        /// <response code="200">If the car is successfully updated.</response>
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] int stock)
         {
@@ -97,6 +124,13 @@ namespace CarStocks.Controllers
             this._carRepository.Update(existingRecord);
         }
 
+        /// <summary>
+        /// Delete the specified car by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <response code="200">If the car is successfully updated.</response>
+        /// <response code="404">If the specified car does not exist.</response>   
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
