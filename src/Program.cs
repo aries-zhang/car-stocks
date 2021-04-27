@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.Extensions.Hosting;
 
-namespace car_stocks
+namespace CarStocks
 {
     public class Program
     {

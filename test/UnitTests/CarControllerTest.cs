@@ -13,7 +13,7 @@ using Moq;
 
 using Xunit;
 
-namespace CarStocks.Test
+namespace CarStocks.Test.UnitTests
 {
     public class CarControllerTest
     {

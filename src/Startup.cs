@@ -14,7 +14,7 @@ using CarStocks.Common;
 using CarStocks.Repositories;
 
 
-namespace car_stocks
+namespace CarStocks
 {
     public class Startup
     {
@@ -44,6 +44,8 @@ namespace car_stocks
                     builder.WithOrigins("localhost:5000").AllowAnyMethod();
                 });
             });
+
+            DatabaseInitialiser.Initialise(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
