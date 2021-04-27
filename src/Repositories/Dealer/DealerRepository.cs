@@ -1,11 +1,11 @@
-﻿using CarStocks.Common;
-using CarStocks.Entities;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.Extensions.Configuration;
+
+using CarStocks.Common;
+using CarStocks.Entities;
+
 using Dapper;
 
 namespace CarStocks.Repositories

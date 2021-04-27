@@ -1,14 +1,17 @@
-using System;
-using CarStocks.Controllers;
-using CarStocks.Repositories;
-using Xunit;
-using Moq;
-using CarStocks.Entities;
 using System.Linq;
+using System.Net;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using CarStocks.Common;
-using System.Net;
+using CarStocks.Controllers;
+using CarStocks.Entities;
+using CarStocks.Repositories;
+
+using Moq;
+
+using Xunit;
 
 namespace CarStocks.Test
 {

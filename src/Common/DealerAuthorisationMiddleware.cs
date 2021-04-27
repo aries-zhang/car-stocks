@@ -1,12 +1,12 @@
-﻿using CarStocks.Entities;
-using CarStocks.Repositories;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+
+using CarStocks.Entities;
+using CarStocks.Repositories;
 
 namespace CarStocks.Common
 {

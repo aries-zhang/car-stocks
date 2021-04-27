@@ -1,12 +1,13 @@
-﻿using CarStocks.Common;
+﻿using System.Collections.Generic;
+
+using System.Net;
+
+using Microsoft.AspNetCore.Mvc;
+
+using CarStocks.Common;
 using CarStocks.Entities;
 using CarStocks.Repositories;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+
 
 
 namespace CarStocks.Controllers
@@ -36,8 +37,8 @@ namespace CarStocks.Controllers
         /// <param name="id"></param>
         /// <returns>A car with the specified Id.</returns>
         /// <response code="200">Returns the car.</response>
-        /// <response code="404">If the specified car does not exist.</response>   
-        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
+        /// <response code="404">If the specified car does not exist.</response>
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>
         [HttpGet]
         [Route("{id}")]
         public Car Get(int id)
@@ -80,7 +81,7 @@ namespace CarStocks.Controllers
         /// </summary>
         /// <param name="car"></param>
         /// <response code="201">If the car is successfully created.</response>
-        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>
         [HttpPost]
         public void Post([FromBody] Car car)
         {
@@ -99,7 +100,7 @@ namespace CarStocks.Controllers
         /// <param name="id"></param>
         /// <param name="stock"></param>
         /// <response code="200">If the car is successfully updated.</response>
-        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] int stock)
         {
@@ -129,8 +130,8 @@ namespace CarStocks.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <response code="200">If the car is successfully updated.</response>
-        /// <response code="404">If the specified car does not exist.</response>   
-        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>   
+        /// <response code="404">If the specified car does not exist.</response>
+        /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
