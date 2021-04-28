@@ -2,48 +2,54 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Dapper;
 using System.Linq;
+using System;
+using System.IO;
 
 namespace CarStocks.Common
 {
-    public static class DatabaseInitialiser
+
+    public class DatabaseInitialiser : BaseRepository
     {
-        public static void Initialise(IConfiguration config)
+        public DatabaseInitialiser(IConfiguration config) : base(config)
         {
-            using var db = new SqliteConnection(config.GetConnectionString("DefaultConnection"));
-            db.Open();
-
-            if (!TableExists(db, "Dealer"))
-            {
-                db.Execute(@"CREATE TABLE Dealer (
-                                Id    INTEGER PRIMARY KEY AUTOINCREMENT,
-                                Token STRING
-                            );");
-                
-                SeedDealders(db);
-            }
-
-            if (!TableExists(db, "Car"))
-            {
-                db.Execute(@"CREATE TABLE Car (
-                                Id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                                DealerId INTEGER,
-                                Make     STRING,
-                                Model    STRING,
-                                Year     INTEGER,
-                                Stock    INTEGER
-                            );");
-            }
         }
 
-        private static bool TableExists(SqliteConnection db, string table)
+        public void Initialise()
         {
-            return db.Query<int>("select count(name) from sqlite_master where type='table' and name=@table", new { table }).First() > 0;
+            using var db = this.GetDbconnection();
+
+            db.Execute(@"CREATE TABLE IF NOT EXISTS Dealer (
+                            Id    INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Token STRING  UNIQUE ON CONFLICT FAIL
+                        );
+
+                        CREATE UNIQUE INDEX IF NOT EXISTS unique_token ON Dealer (
+                            Token
+                        );
+
+                        CREATE TABLE IF NOT EXISTS Car (
+                            Id       INTEGER PRIMARY KEY AUTOINCREMENT,
+                            DealerId INTEGER,
+                            Make     STRING,
+                            Model    STRING,
+                            Year     INTEGER,
+                            Stock    INTEGER
+                        );
+
+                        INSERT OR IGNORE INTO Dealer ( Token ) VALUES ( 'abc' );
+                        INSERT OR IGNORE INTO Dealer ( Token ) VALUES ( 'def' ); 
+            ");
         }
 
-        private static void SeedDealders(SqliteConnection db)
+        public void Destroy()
         {
-            db.Execute(@"INSERT INTO Dealer ( Token ) VALUES ( 'abc' );");
-            db.Execute(@"INSERT INTO Dealer ( Token ) VALUES ( 'def' );");
+            var connectionString = this.GetDbconnection().ConnectionString;
+
+            var segaments = (connectionString.Contains(";") ? connectionString.Split(";") : new string[] { connectionString })
+            .Select(s => s.Contains("=") ? s.Split("=") : new string[] { s, string.Empty })
+            .ToDictionary(s => s[0], s => s[1]);
+
+            var path = segaments.ContainsKey("Data Source") ? segaments["Data Source"] : string.Empty;
         }
     }
 }

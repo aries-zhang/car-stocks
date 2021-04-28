@@ -11,11 +11,11 @@ using Xunit;
 
 namespace CarStocks.Test.IntegrationTests
 {
-    public class SwaggerTest : IClassFixture<CarStockWebApplicationFactory<Startup>>
+    public class SwaggerTest : IClassFixture<TestAppFactory<Startup>>
     {
         private readonly HttpClient _client;
 
-        public SwaggerTest(CarStockWebApplicationFactory<Startup> factory)
+        public SwaggerTest(TestAppFactory<Startup> factory)
         {
             _client = factory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", "abc");

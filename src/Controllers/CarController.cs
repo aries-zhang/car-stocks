@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using CarStocks.Common;
 using CarStocks.Entities;
 using CarStocks.Repositories;
-
-
+using System;
 
 namespace CarStocks.Controllers
 {
@@ -84,14 +83,16 @@ namespace CarStocks.Controllers
         /// <response code="400">If bad request or invalid values for "car".</response>
         /// <response code="407">If Authorisation header is invalid, or data not in auth scope.</response>
         [HttpPost]
-        public void Post([FromBody] Car car)
+        public Car Post([FromBody] Car car)
         {
             // TODO: What if combination of make, model and year for a single dealer already exists?
             car.DealerId = _authDealerId;
 
-            this._carRepository.Insert(car);
+            car = this._carRepository.Insert(car);
 
             Response.StatusCode = (int)HttpStatusCode.Created;
+
+            return car;
         }
 
         /// <summary>

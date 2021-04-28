@@ -1,9 +1,9 @@
 ###
-GET http://localhost:5000/car/6 HTTP/1.1
+GET http://localhost:5000/car/1 HTTP/1.1
 Authorization: Token abc
 
 ###
-GET http://localhost:5000/car/search?make=t&model=x HTTP/1.1
+GET http://localhost:5000/car/search?make=BMW HTTP/1.1
 Authorization: Token abc
 
 ###
@@ -22,7 +22,7 @@ Authorization: Token abc
 {
     "Make": "Toyota",
     "Model": "XYZ",
-    "Year": "2019"
+    "Year": "1"
 }
 
 ###

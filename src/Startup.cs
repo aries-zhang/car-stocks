@@ -45,7 +45,7 @@ namespace CarStocks
                 });
             });
 
-            DatabaseInitialiser.Initialise(Configuration);
+            new DatabaseInitialiser(Configuration).Initialise();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

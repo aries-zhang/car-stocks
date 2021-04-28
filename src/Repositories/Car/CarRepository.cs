@@ -33,10 +33,9 @@ namespace CarStocks.Repositories
 
         public Car Insert(Car entity)
         {
-            var sql = "INSERT INTO Car (DealerId,Make,Model,Year,Stock) VALUES (@DealerId,@Make,@Model,@Year,@Stock); ";
+            var sql = "INSERT INTO Car (DealerId,Make,Model,Year,Stock) VALUES (@DealerId,@Make,@Model,@Year,@Stock); select last_insert_rowid();";
 
             using var db = this.GetDbconnection();
-
             entity.Id = db.ExecuteScalar<int>(sql, entity);
 
             return entity;

@@ -9,7 +9,7 @@ using CarStocks.Common;
 
 namespace CarStocks.Test.Common
 {
-    public class CarStockWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
+    public class TestAppFactory<TStartup> : WebApplicationFactory<Startup>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -20,6 +20,23 @@ namespace CarStocks.Test.Common
                 .Build();
 
                 config.AddConfiguration(integrationConfig);
+            });
+
+            builder.ConfigureServices(services =>
+            {
+                var sp = services.BuildServiceProvider();
+
+                using var scope = sp.CreateScope();
+
+                var scopedServices = scope.ServiceProvider;
+
+                var config = scopedServices.GetRequiredService<IConfiguration>();
+
+
+                var databaseInitialiser = new DatabaseInitialiser(config);
+
+                databaseInitialiser.Destroy();
+                databaseInitialiser.Initialise();
             });
         }
     }
